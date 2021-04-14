@@ -1,142 +1,103 @@
 'use strict';
 
-// Needed 
-// min/max customers and avg for cookies at each store 
-// Different array for each store front
-// 
-console.log('I am Alive')
-
-
-// object for seattle
-const seattle = {
-  name: 'Seattle',
-  minCustPerHour: 23,
-  maxCustPerHour: 65,
-  avgCook: 6.3,
-  seattleArray: [],
-
-  }
-
-// object for tokyo
-const tokyo = {
-  name : 'Tokyo',
-  minCustPerHour: 3,
-  maxCustPerHour: 24,
-  avgCook: 1.2,
-  tokyoArray: [],
-}
-
-// object for dubai
-const dubai = {
-  name : 'Dubai',
-  minCustPerHour: 11,
-  maxCustPerHour: 38,
-  avgCook: 3.7,
-  dubaiArray: [],
-}
-
-// object for paris
-const paris = {
-  name : 'Paris',
-  minCustPerHour:  20,
-  maxCustPerHour: 38,
-  avgCook:  2.3,
-  parisArray: [],
-}
-
-// object for lima
-const lima = {
-  name : 'Lima',
-  minCustPerHour: 2,
-  maxCustPerHour: 16,
-  avgCook: 4.6,
-  limaArray: [],
-}
-
-function cookieCounter(a,b,c) {
-  let numofRandomCustomers = Math.floor(Math.random() * (b-a)) + a;
-  // let avgCookiesPurchase = Math.floor(Math.random()) * (c + 1);
-  let numberofCooks = Math.floor(c * numofRandomCustomers);
-  return numberofCooks
-
-}
-
-// function for random customers
-function randomCust(a, b) {
-  let randomCustomers= Math.floor(Math.random() * (b - a +1) + a);
-  return randomCustomers;
-
-}
-
-// function for avgcookies 
-// 
-function cooksAvg(min,max){
-  return Math.floor(Math.random() * (max - min +1) + min)
-}
-
 // Array for hours of operation
-const hoursofopArray = ['6am', '7am','8am','9am','10am','11am','12pm','1pm','2pm','3pm','4pm','5pm','6pm','7pm']
+const hoursOfOperationArray = ['6:00am', '7:00am','8:00am','9:00am','10:00am','11:00am','12:00pm','1:00pm','2:00pm','3:00pm','4:00pm','5:00pm','6:00pm','7:00pm'];
 
-// Array for stores 
-const storeArray = [seattle, tokyo, dubai, paris, lima]
-console.log(storeArray.length)
-
-// get element storeFronts
-const storeFronts = document.getElementById("storeFronts");
-
-// create article element
-for (let s = 0; s < storeArray.length; s++){ 
-  const article = document.createElement('article')
-  let storeNow = storeArray[s];
-
-  const h3Elem = document.createElement('h3');
-  h3Elem.textContent = storeNow.name;
-  article.appendChild(h3Elem);
-  storeFronts.appendChild(article);
-
-  
-  const ulElem = document.createElement('ul')
-  article.appendChild(ulElem)
-  
-  
-  for (let h = 0; h < hoursofopArray.length; h++) {
-    let hoursNow = hoursofopArray[h];
-    const liElem = document.createElement('li');
-    liElem.textContent = `${hoursNow}: ${cookieCounter(storeNow.minCustPerHour, storeNow.maxCustPerHour, storeNow.avgCook)} cookies`;
-    ulElem.appendChild(liElem)
-  
+// Constructor function for SalmonCookieStores
+function SalmonCookieStores(name,minCustomersPerHour,maxCustomersPerHour,averageCookieSale,) {
+  this.name = name;
+  this.minCustomersPerHour = minCustomersPerHour;
+  this.maxCustomersPerHour = maxCustomersPerHour;
+  this.averageCookieSale = averageCookieSale;
+  this.numberofRandomCustomers = function (){
+    let numberofRandomCustomers = Math.floor(Math.random()) * (this.maxCustomersPerHour - this.minCustomersPerHour + 1) + minCustomersPerHour;
+    return numberofRandomCustomers;
   }
-  
 }
 
 
+let seattle = new SalmonCookieStores ('Seattle', 23 , 65 , 6.3);
+let tokyo = new SalmonCookieStores('Tokyo', 3 , 24, 1.2);
+let dubai = new SalmonCookieStores('Dubai', 11 , 38 , 3.7);
+let paris = new SalmonCookieStores('Paris', 20 , 38 , 2.3);
+let lima = new SalmonCookieStores('Lima', 2 , 16 , 4.6);
 
-// customersPerHourCounter: function() {
-//   // for (let i = 0; i < hoursofopArray.length; i++) {
-//     return this.customersEachHour.push(Math.floor(Math.random() * (this.maxCustPerHour - this.minCustPerHour +1) + this.minCustPerHour));
-//   // }
-// },
-// // loop through hours of operation for each hour get a random customer number and multiply that by average cookie sale push into number of cookies array
 
-// cookieCounter: function() {
-//   // totaldailycookies = 0
-//   // write for loop here
-//   // attach line 68 to a variable
+// Array for different Salmon Cookie Stores
+  const salmonCookieStoreArray = [seattle,tokyo,dubai,paris,lima];
 
-//   this.customersPerHourCounter()
-//   // multiply the results of customers per hour by average cookie
 
-//   let solution = Math.floor(c * randomCustomers);
-//   // totalDailyCookies += solution
-//   for (let i = 0; i < hoursofopArray.length; i++ ) {
-  
-//   }
-//   // console.log(solution);
-//   // this.numberofCooks.push(solution);
-//   // console.log(this.numberofCooks);
-//   // return numberofCooks;
-// },
+  // Function for sales for each location
+  function generateSalesArray(SalmonCookieStores) {
+    SalmonCookieStores.grandTotal = 0;
+    SalmonCookieStores.hourlySalesArray = [];
+    for (let h = 0; h < hoursOfOperationArray.length; h++) {
+      let customers = SalmonCookieStores.numberofRandomCustomers();
+      let salmonCookiesSold = Math.floor(customers * SalmonCookieStores.averageCookieSale);
+      SalmonCookieStores.grandTotal += salmonCookiesSold; 
+      SalmonCookieStores.hourlySalesArray.push(salmonCookiesSold);
+    }
+  }
 
-// }
+  for (let s = 0; s < salmonCookieStoreArray.length; s++) { let SalmonCookieStores = salmonCookieStoreArray[s]; generateSalesArray(SalmonCookieStores);
+  }
+
+
+const storeFronts = document.getElementById('storeFronts');
+
+const articleElem = document.createElement('article');
+storeFronts.appendChild(articleElem);
+
+const tableElem = document.createElement('table');
+articleElem.appendChild(tableElem);
+
+
+const trElem = document.createElement('tr');
+tableElem.appendChild(trElem);
+
+// function for th element 
+for (let i = -1; i < hoursOfOperationArray.length; i++) {
+  const thElem = document.createElement("th");
+  if (i === -1) {
+
+    thElem.textContent = ` `;
+    trElem.appendChild(thElem);
+
+  } else if (i === hoursOfOperationArray.length) {
+
+    thElem.textContent = `Totals`;
+    trElem.appendChild(thElem);
+
+  } else if (i < hoursOfOperationArray.length) {
+
+    let currentHour = hoursOfOperationArray[i];
+    thElem.textContent = `${currentHour}`;
+    trElem.appendChild(thElem);
+  }
+ 
+}
+
+for (let q =0; q < salmonCookieStoreArray.length; q++) {
+
+  let currentStore = salmonCookieStoreArray[q];
+
+  const trElem1 = document.createElement('tr');
+  tableElem.appendChild(trElem1);
+
+  for (let i = -1; i < hoursOfOperationArray.length; i++) {
+    if (i === -1) {
+      const tdElem = document.createElement('td');
+      tdElem.textContent = `${currentStore.name}`;
+      trElem1.appendChild(tdElem);
+ } else if (i >= 0) {
+
+  let currentHourSales = currentStore.hourlySalesArray[i];
+
+  const tdElem = document.createElement ('td');
+  tdElem.textContent = `${currentHourSales}`;
+  trElem1.appendChild(tdElem);
+ }
+}
+}
 
 
