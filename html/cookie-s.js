@@ -10,53 +10,58 @@ function SalmonCookieStores(name,minCustomersPerHour,maxCustomersPerHour,average
   this.maxCustomersPerHour = maxCustomersPerHour;
   this.averageCookieSale = averageCookieSale;
   this.numberofRandomCustomers = function (){
-    let numberofRandomCustomers = Math.floor(Math.random()) * (this.maxCustomersPerHour - this.minCustomersPerHour + 1) + minCustomersPerHour;
+    let numberofRandomCustomers = Math.floor(Math.random() * (this.maxCustomersPerHour - this.minCustomersPerHour + 1) + this.minCustomersPerHour);
     return numberofRandomCustomers;
   }
 }
 
-
-let seattle = new SalmonCookieStores ('Seattle', 23 , 65 , 6.3);
-let tokyo = new SalmonCookieStores('Tokyo', 3 , 24, 1.2);
-let dubai = new SalmonCookieStores('Dubai', 11 , 38 , 3.7);
-let paris = new SalmonCookieStores('Paris', 20 , 38 , 2.3);
-let lima = new SalmonCookieStores('Lima', 2 , 16 , 4.6);
+// Variable description for all SalmonCookieStores 
+  let seattle = new SalmonCookieStores ('Seattle', 23 , 65 , 6.3);
+  let tokyo = new SalmonCookieStores('Tokyo', 3 , 24, 1.2);
+  let dubai = new SalmonCookieStores('Dubai', 11 , 38 , 3.7);
+  let paris = new SalmonCookieStores('Paris', 20 , 38 , 2.3);
+  let lima = new SalmonCookieStores('Lima', 2 , 16 , 4.6);
 
 
 // Array for different Salmon Cookie Stores
   const salmonCookieStoreArray = [seattle,tokyo,dubai,paris,lima];
 
-
   // Function for sales for each location
-  function generateSalesArray(SalmonCookieStores) {
-    SalmonCookieStores.grandTotal = 0;
-    SalmonCookieStores.hourlySalesArray = [];
+  function generateSalesArray(salmonCookieStores) {
+    salmonCookieStores.grandTotal = 0;
+    salmonCookieStores.hourlySalesArray = [];
     for (let h = 0; h < hoursOfOperationArray.length; h++) {
-      let customers = SalmonCookieStores.numberofRandomCustomers();
-      let salmonCookiesSold = Math.floor(customers * SalmonCookieStores.averageCookieSale);
-      SalmonCookieStores.grandTotal += salmonCookiesSold; 
-      SalmonCookieStores.hourlySalesArray.push(salmonCookiesSold);
+      let customers = salmonCookieStores.numberofRandomCustomers();
+      let salmonCookiesSold = Math.floor(customers * salmonCookieStores.averageCookieSale);
+      salmonCookieStores.grandTotal += salmonCookiesSold; 
+      salmonCookieStores.hourlySalesArray.push(salmonCookiesSold);
     }
   }
 
-  for (let s = 0; s < salmonCookieStoreArray.length; s++) { let SalmonCookieStores = salmonCookieStoreArray[s]; generateSalesArray(SalmonCookieStores);
+  // for loop to call function at each location
+  for (let s = 0; s < salmonCookieStoreArray.length; s++) {
+    let SalmonCookieStores = salmonCookieStoreArray[s]; 
+    generateSalesArray(SalmonCookieStores);
   }
 
 
-const storeFronts = document.getElementById('storeFronts');
+// getting storeFronts Id 
+  const storeFronts = document.getElementById('storeFronts');
 
-const articleElem = document.createElement('article');
-storeFronts.appendChild(articleElem);
+// creation of article within storeFronts 
+  const articleElem = document.createElement('article');
+  storeFronts.appendChild(articleElem);
 
-const tableElem = document.createElement('table');
-articleElem.appendChild(tableElem);
+// creation of table within article
+  const tableElem = document.createElement('table');
+  articleElem.appendChild(tableElem);
 
-
-const trElem = document.createElement('tr');
-tableElem.appendChild(trElem);
+// creation of tr element or row within table
+  const trElem = document.createElement('tr');
+  tableElem.appendChild(trElem);
 
 // function for th element 
-for (let i = -1; i < hoursOfOperationArray.length; i++) {
+for (let i = -1; i < hoursOfOperationArray.length + 1; i++) {
   const thElem = document.createElement("th");
   if (i === -1) {
 
@@ -77,27 +82,62 @@ for (let i = -1; i < hoursOfOperationArray.length; i++) {
  
 }
 
-for (let q =0; q < salmonCookieStoreArray.length; q++) {
+// function to get cookies sold at each hour at each location 
+for (let q = 0; q < salmonCookieStoreArray.length; q++) {
 
   let currentStore = salmonCookieStoreArray[q];
 
   const trElem1 = document.createElement('tr');
   tableElem.appendChild(trElem1);
 
-  for (let i = -1; i < hoursOfOperationArray.length; i++) {
+  for (let i = -1; i < hoursOfOperationArray.length + 1; i++) {
     if (i === -1) {
       const tdElem = document.createElement('td');
-      tdElem.textContent = `${currentStore.name}`;
+      tdElem.textContent = currentStore.name;
       trElem1.appendChild(tdElem);
- } else if (i >= 0) {
+ } else if (i >= 0 && i < hoursOfOperationArray.length)  {
 
   let currentHourSales = currentStore.hourlySalesArray[i];
 
   const tdElem = document.createElement ('td');
-  tdElem.textContent = `${currentHourSales}`;
+  tdElem.textContent = currentHourSales;
   trElem1.appendChild(tdElem);
+ }
+ if ( i === hoursOfOperationArray.length) {
+   const tdElem = document.createElement ('td')
+   tdElem.textContent = currentStore.grandTotal;
+   trElem1.appendChild(tdElem);
  }
 }
 }
+function renderFooter () {
+  const trElem = document.createElement('tr')
+  tableElem.appendChild(trElem);
+  const thElem = document.createElement('th');
+  thElem.textContent = 'Hourly Total'
+  trElem.appendChild(thElem);
+  let dailytotal = 0;
+  // we are going to loop through the hours of operation
+  for (let index = 0; index < hoursOfOperationArray.length; index ++) {
+    let hourlytotal = 0;
+    for (let index2 = 0; index2 < salmonCookieStoreArray.length; index2 ++){
+      let currentstore = salmonCookieStoreArray [index2];
+      let currenthourlysale = currentstore.hourlySalesArray [index];
+      hourlytotal += currenthourlysale;
+    }
+    const tdElem = document.createElement('td')
+    tdElem.textContent = hourlytotal
+    trElem.appendChild(tdElem);
+    dailytotal += hourlytotal
+  }
+   const tdElem2 = document.createElement('td')
+   tdElem2.textContent = dailytotal
+   trElem.appendChild(tdElem2);
+  // inside that loop we are going to loop through stores array
+  // we are going to add that hours total through all the stores 
+  // create a td and make text content the hourly total and append to the row 
 
 
+}
+
+renderFooter();
