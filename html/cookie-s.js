@@ -2,6 +2,8 @@
 
 // Array for hours of operation
 const hoursOfOperationArray = ['6:00am ', '7:00am ','8:00am ','9:00am ','10:00am ' ,'11:00am ','12:00pm ','1:00pm ','2:00pm ','3:00pm ','4:00pm ','5:00pm ','6:00pm ','7:00pm '];
+// Global function for form 
+
 
 // Constructor function for SalmonCookieStores
 function SalmonCookieStores(name,minCustomersPerHour,maxCustomersPerHour,averageCookieSale,) {
@@ -16,20 +18,22 @@ function SalmonCookieStores(name,minCustomersPerHour,maxCustomersPerHour,average
 }
 
 // Variable description for all SalmonCookieStores 
-  let seattle = new SalmonCookieStores ('Seattle', 23 , 65 , 6.3);
-  let tokyo = new SalmonCookieStores('Tokyo', 3 , 24, 1.2);
-  let dubai = new SalmonCookieStores('Dubai', 11 , 38 , 3.7);
-  let paris = new SalmonCookieStores('Paris', 20 , 38 , 2.3);
-  let lima = new SalmonCookieStores('Lima', 2 , 16 , 4.6);
+let seattle = new SalmonCookieStores ('Seattle', 23 , 65 , 6.3);
+let tokyo = new SalmonCookieStores('Tokyo', 3 , 24, 1.2);
+let dubai = new SalmonCookieStores('Dubai', 11 , 38 , 3.7);
+let paris = new SalmonCookieStores('Paris', 20 , 38 , 2.3);
+let lima = new SalmonCookieStores('Lima', 2 , 16 , 4.6);
 
 
 // Array for different Salmon Cookie Stores
-  const salmonCookieStoreArray = [seattle,tokyo,dubai,paris,lima];
+const salmonCookieStoreArray = [seattle,tokyo,dubai,paris,lima];
 
-  // Function for sales for each location
-  function generateSalesArray(salmonCookieStores) {
-    salmonCookieStores.grandTotal = 0;
-    salmonCookieStores.hourlySalesArray = [];
+const formElem = document.getElementById('newStoreInput');
+
+// Function for sales for each location
+function generateSalesArray(salmonCookieStores) {
+  salmonCookieStores.grandTotal = 0;
+  salmonCookieStores.hourlySalesArray = [];
     for (let h = 0; h < hoursOfOperationArray.length; h++) {
       let customers = salmonCookieStores.numberofRandomCustomers();
       let salmonCookiesSold = Math.floor(customers * salmonCookieStores.averageCookieSale);
@@ -37,8 +41,9 @@ function SalmonCookieStores(name,minCustomersPerHour,maxCustomersPerHour,average
       salmonCookieStores.hourlySalesArray.push(salmonCookiesSold);
     }
   }
+  
 
-  // for loop to call function at each location
+  //for loop to call function at each location
   for (let s = 0; s < salmonCookieStoreArray.length; s++) {
     let SalmonCookieStores = salmonCookieStoreArray[s]; 
     generateSalesArray(SalmonCookieStores);
@@ -107,16 +112,21 @@ for (let q = 0; q < salmonCookieStoreArray.length; q++) {
    const tdElem = document.createElement ('td')
    tdElem.textContent = currentStore.grandTotal;
    trElem1.appendChild(tdElem);
- }
+  }
+
 }
 }
-function renderFooter () {
+function renderFooter() {
+
   const trElem = document.createElement('tr')
   tableElem.appendChild(trElem);
+
   const thElem = document.createElement('th');
   thElem.textContent = 'Hourly Total'
   trElem.appendChild(thElem);
+
   let dailytotal = 0;
+
   // we are going to loop through the hours of operation
   for (let index = 0; index < hoursOfOperationArray.length; index ++) {
     let hourlytotal = 0;
@@ -128,16 +138,38 @@ function renderFooter () {
     const tdElem = document.createElement('td')
     tdElem.textContent = hourlytotal
     trElem.appendChild(tdElem);
+
     dailytotal += hourlytotal
   }
-   const tdElem2 = document.createElement('td')
-   tdElem2.textContent = dailytotal
-   trElem.appendChild(tdElem2);
-  // inside that loop we are going to loop through stores array
-  // we are going to add that hours total through all the stores 
-  // create a td and make text content the hourly total and append to the row 
-
-
+  const tdElem2 = document.createElement('td')
+  tdElem2.textContent = dailytotal
+  trElem.appendChild(tdElem2);
+  
 }
 
 renderFooter();
+
+// Handle function
+
+// function handleSubmit(event) {
+
+//   event.preventDefault();
+//   console.log(event.target.minCustomersPerHour.value);
+//   console.log(event.target.name.value);
+  
+//   let name = event.target.name.value;
+//   let minCustomersPerHour = parseInt(event.target.minCustomersPerHour.value);
+//   let maxCustomersPerHour = parseInt(event.target.maxCustomersPerHour.value);
+//   let averageCookieSale = parseInt(event.target.value);
+
+//   let newStoreEntry = new SalmonCookieStores(name, minCustomersPerHour, maxCustomersPerHour, averageCookieSale);salmonCookieStoreArray.push(newStoreEntry);
+  
+//   event.target.reset();
+  
+// }
+
+// // Event Listener
+
+//   formElem.addEventListener('submit', handleSubmit);
+
+
