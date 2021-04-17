@@ -25,6 +25,13 @@ let paris = new SalmonCookieStores('Paris', 20 , 38 , 2.3);
 let lima = new SalmonCookieStores('Lima', 2 , 16 , 4.6);
 
 
+
+const storeFronts = document.getElementById('storeFronts');
+const articleElem = document.createElement('article');
+const tableElem = document.createElement('table');
+const trElem = document.createElement('tr');
+
+
 // Array for different Salmon Cookie Stores
 const salmonCookieStoreArray = [seattle,tokyo,dubai,paris,lima];
 
@@ -50,21 +57,14 @@ function generateSalesArray(salmonCookieStores) {
   }
 
 
-// getting storeFronts Id 
-  const storeFronts = document.getElementById('storeFronts');
+  function renderHeader() {
+    storeFronts.appendChild(articleElem);
 
-// creation of article within storeFronts 
-  const articleElem = document.createElement('article');
-  storeFronts.appendChild(articleElem);
+    articleElem.appendChild(tableElem);
 
-// creation of table within article
-  const tableElem = document.createElement('table');
-  articleElem.appendChild(tableElem);
-
-// creation of tr element or row within table
-  const trElem = document.createElement('tr');
-  tableElem.appendChild(trElem);
-
+    tableElem.appendChild(trElem);
+  
+ 
 // function for th element 
 for (let i = -1; i < hoursOfOperationArray.length + 1; i++) {
   const thElem = document.createElement("th");
@@ -73,33 +73,39 @@ for (let i = -1; i < hoursOfOperationArray.length + 1; i++) {
     thElem.textContent = ` `;
     trElem.appendChild(thElem);
 
-  } else if (i === hoursOfOperationArray.length) {
-
-    thElem.textContent = `Totals`;
-    trElem.appendChild(thElem);
-
   } else if (i < hoursOfOperationArray.length) {
 
     let currentHour = hoursOfOperationArray[i];
-    thElem.textContent = `${currentHour}`;
+    thElem.textContent = currentHour;
+    trElem.appendChild(thElem);
+    
+    
+  } else if (i === hoursOfOperationArray.length) {
+    
+    thElem.textContent = `Totals`;
     trElem.appendChild(thElem);
   }
- 
+}
 }
 
+function renderContent() {
 // function to get cookies sold at each hour at each location 
 for (let q = 0; q < salmonCookieStoreArray.length; q++) {
 
   let currentStore = salmonCookieStoreArray[q];
+
+  let totalCookiesSold = currentStore.grandTotal;
 
   const trElem1 = document.createElement('tr');
   tableElem.appendChild(trElem1);
 
   for (let i = -1; i < hoursOfOperationArray.length + 1; i++) {
     if (i === -1) {
-      const tdElem = document.createElement('td');
-      tdElem.textContent = currentStore.name;
-      trElem1.appendChild(tdElem);
+
+      const thElem = document.createElement('th');
+      thElem.textContent = currentStore.name;
+      trElem1.appendChild(thElem);
+
  } else if (i >= 0 && i < hoursOfOperationArray.length)  {
 
   let currentHourSales = currentStore.hourlySalesArray[i];
@@ -108,12 +114,13 @@ for (let q = 0; q < salmonCookieStoreArray.length; q++) {
   tdElem.textContent = currentHourSales;
   trElem1.appendChild(tdElem);
  }
- if ( i === hoursOfOperationArray.length) {
+ else if ( i === hoursOfOperationArray.length) {
    const tdElem = document.createElement ('td')
-   tdElem.textContent = currentStore.grandTotal;
+   tdElem.textContent = totalCookiesSold.grandTotal;
    trElem1.appendChild(tdElem);
   }
 
+}
 }
 }
 function renderFooter() {
@@ -147,29 +154,42 @@ function renderFooter() {
   
 }
 
+
+//Handle function
+
+function handleSubmit(event) {
+  
+  event.preventDefault();
+  console.log(event.target.minCustomersPerHour.value);
+  console.log(event.target.name.value);
+  
+  let name = event.target.name.value;
+  let minCustomersPerHour = parseInt(event.target.minCustomersPerHour.value);
+  let maxCustomersPerHour = parseInt(event.target.maxCustomersPerHour.value);
+  let averageCookieSale = parseInt(event.target.value);
+  
+  let newStoreEntry = new SalmonCookieStores(name, minCustomersPerHour, maxCustomersPerHour, averageCookieSale);salmonCookieStoreArray.push(newStoreEntry);
+  
+  event.target.reset();
+  
+  tableElem.innerHTML = ' ';
+  trElem.innerHTML = ` `;
+  
+  for (let s = 0; s < salmonCookieStoreArray.length; s++) {
+    let salmonCookieStores = salmonCookieStoreArray[s]; 
+    generateSalesArray(salmonCookieStores);
+  }
+
+// renderHeader();
+// renderContent();
+// renderFooter();
+}
+
+// Event Listener
+
+formElem.addEventListener('submit', handleSubmit);
+
+renderHeader();
+renderContent();
 renderFooter();
-
-// Handle function
-
-// function handleSubmit(event) {
-
-//   event.preventDefault();
-//   console.log(event.target.minCustomersPerHour.value);
-//   console.log(event.target.name.value);
-  
-//   let name = event.target.name.value;
-//   let minCustomersPerHour = parseInt(event.target.minCustomersPerHour.value);
-//   let maxCustomersPerHour = parseInt(event.target.maxCustomersPerHour.value);
-//   let averageCookieSale = parseInt(event.target.value);
-
-//   let newStoreEntry = new SalmonCookieStores(name, minCustomersPerHour, maxCustomersPerHour, averageCookieSale);salmonCookieStoreArray.push(newStoreEntry);
-  
-//   event.target.reset();
-  
-// }
-
-// // Event Listener
-
-//   formElem.addEventListener('submit', handleSubmit);
-
 
